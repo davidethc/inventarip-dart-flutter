@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'providers/inventario_provider.dart';
-import 'screens/inventario_page.dart';
+import 'package:inventario_flutter/providers/inventario_provider.dart';
+import 'package:inventario_flutter/providers/theme_provider.dart';
+import 'package:inventario_flutter/screens/inventario_page.dart';
 
 void main() {
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => InventarioProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => InventarioProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -17,13 +21,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Inventario App',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const InventarioPage(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Inventario App',
+          theme: themeProvider.currentTheme,
+          debugShowCheckedModeBanner: false,
+          home: const InventarioPage(),
+        );
+      },
     );
   }
 }
